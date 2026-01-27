@@ -116,6 +116,10 @@
   (ok (is-whitelisted address))
 )
 
+(define-public (check-whitelisted (address principal))
+  (ok (is-whitelisted address))
+)
+
 ;; Public functions
 
 (define-public (initialize
