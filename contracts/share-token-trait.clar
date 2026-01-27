@@ -13,5 +13,8 @@
     ;; Governance specific functions
     (lock-shares (principal uint) (response bool uint))
     (unlock-shares (principal uint) (response bool uint))
+    
+    ;; Whitelist check function
+    (check-whitelisted (principal) (response bool uint))
   )
 )
