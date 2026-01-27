@@ -75,10 +75,8 @@
     (token-contract principal)
     (address principal)
   )
-  (match (contract-call? token-contract is-address-whitelisted address)
-    result (unwrap-panic result)
-    false
-  )
+  ;; Call the read-only function directly - Clarity should handle this
+  (unwrap-panic (contract-call? token-contract is-address-whitelisted address))
 )
 
 (define-private (calculate-platform-fee (amount uint))
