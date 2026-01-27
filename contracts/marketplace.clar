@@ -108,6 +108,7 @@
       (new-order-id (+ (var-get last-order-id) u1))
       (total-price (* quantity price-per-share))
       (seller-balance (unwrap-panic (contract-call? share-token-contract get-balance tx-sender)))
+      (contract-address (as-contract tx-sender))
     )
     ;; Validate inputs
     (asserts! (> quantity u0) ERR-INVALID-AMOUNT)
@@ -121,7 +122,7 @@
     (asserts! (>= seller-balance quantity) ERR-INSUFFICIENT-BALANCE)
     
     ;; Escrow shares (transfer to this contract - contract receives as contract-caller)
-    (try! (contract-call? share-token-contract transfer quantity tx-sender (as-contract tx-sender) none))
+    (try! (contract-call? share-token-contract transfer quantity tx-sender contract-address none))
     
     ;; Create order
     (map-set orders new-order-id {
@@ -168,6 +169,7 @@
     (
       (new-order-id (+ (var-get last-order-id) u1))
       (total-price (* quantity price-per-share))
+      (contract-address (as-contract tx-sender))
     )
     ;; Validate inputs
     (asserts! (> quantity u0) ERR-INVALID-AMOUNT)
@@ -178,7 +180,7 @@
     (asserts! (is-whitelisted share-token-contract tx-sender) ERR-NOT-WHITELISTED)
     
     ;; Escrow STX (buyer deposits payment to this contract)
-    (try! (stx-transfer? total-price tx-sender (as-contract tx-sender)))
+    (try! (stx-transfer? total-price tx-sender contract-address))
     
     ;; Create order
     (map-set orders new-order-id {
@@ -221,6 +223,7 @@
       (platform-fee (calculate-platform-fee total-price))
       (seller-proceeds (- total-price platform-fee))
       (share-token-contract (get share-token-contract order))
+      (contract-address (as-contract tx-sender))
     )
     ;; Check order is open
     (asserts! (is-eq (get status order) ORDER-STATUS-OPEN) ERR-ORDER-FILLED)
@@ -235,7 +238,7 @@
     (asserts! (is-whitelisted share-token-contract tx-sender) ERR-NOT-WHITELISTED)
     
     ;; Buyer pays STX to this contract  
-    (try! (stx-transfer? total-price tx-sender (as-contract tx-sender)))
+    (try! (stx-transfer? total-price tx-sender contract-address))
     
     ;; Transfer shares from escrow to buyer
     (try! (as-contract (contract-call? share-token-contract transfer quantity tx-sender tx-sender none)))
