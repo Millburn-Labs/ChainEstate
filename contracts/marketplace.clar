@@ -1,6 +1,8 @@
 ;; Marketplace Contract
 ;; Peer-to-peer trading platform for property shares
 
+(use-trait share-token-trait .share-token-trait.share-token-trait)
+
 ;; Error codes
 (define-constant ERR-NOT-AUTHORIZED (err u600))
 (define-constant ERR-ORDER-NOT-FOUND (err u601))
