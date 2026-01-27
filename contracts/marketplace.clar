@@ -72,7 +72,7 @@
 )
 
 (define-private (is-whitelisted
-    (token-contract <share-token-trait>)
+    (token-contract principal)
     (address principal)
   )
   (unwrap-panic (contract-call? token-contract is-address-whitelisted address))
