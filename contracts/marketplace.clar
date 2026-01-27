@@ -107,7 +107,7 @@
     (quantity uint)
     (price-per-share uint)
     (expiration uint)
-    (share-token-contract principal)
+    (share-token-contract <share-token-trait>)
   )
   (let (
       (new-order-id (+ (var-get last-order-id) u1))
@@ -140,8 +140,8 @@
       total-price: total-price,
       expiration: expiration,
       status: ORDER-STATUS-OPEN,
-      share-token-contract: share-token-contract,
-      created-at: block-height,
+      share-token-contract: (contract-of share-token-contract),
+      created-at: stacks-block-height,
     })
 
     ;; Track escrowed shares
@@ -169,7 +169,7 @@
     (quantity uint)
     (price-per-share uint)
     (expiration uint)
-    (share-token-contract principal)
+    (share-token-contract <share-token-trait>)
   )
   (let (
       (new-order-id (+ (var-get last-order-id) u1))
@@ -197,7 +197,7 @@
       expiration: expiration,
       status: ORDER-STATUS-OPEN,
       share-token-contract: share-token-contract,
-      created-at: block-height,
+      created-at: stacks-block-height,
     })
 
     ;; Update last order ID
@@ -293,7 +293,7 @@
     (asserts! (is-eq (get order-type order) ORDER-TYPE-BUY) ERR-NOT-AUTHORIZED)
 
     ;; Check not expired
-    (asserts! (< block-height (get expiration order)) ERR-ORDER-EXPIRED)
+    (asserts! (< stacks-block-height (get expiration order)) ERR-ORDER-EXPIRED)
 
     ;; Check seller is whitelisted
     (asserts! (is-whitelisted share-token-contract tx-sender) ERR-NOT-WHITELISTED)
