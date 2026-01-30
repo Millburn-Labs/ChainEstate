@@ -9,7 +9,6 @@ import {
   AppConfig,
   UserSession,
   showConnect,
-  openAuthRequestPopup,
   AuthOptions,
   FinishedAuthData,
 } from '@stacks/connect';
@@ -65,7 +64,7 @@ export async function connectWallet(
     userSession: getUserSession(),
   };
 
-  await openAuthRequestPopup(authOptions);
+  await showConnect(authOptions);
 }
 
 /**
