@@ -69,7 +69,7 @@ export async function connectWallet(
  */
 export async function showConnectModal(): Promise<void> {
   await showConnect({
-    appDetails: appConfig.appDetails,
+    appDetails,
     onFinish: (data) => {
       console.log('User authenticated:', data);
     },
@@ -111,5 +111,15 @@ export function signOut(): void {
  */
 export function getUserAddress(): string | null {
   const user = getCurrentUser();
-  return user?.profile?.stxAddress?.[getNetwork().version] || null;
+  if (!user) return null;
+  
+  // UserData has profile with stxAddress
+  // The address format depends on the network
+  const network = getNetwork();
+  const isMainnet = network === STACKS_MAINNET;
+  
+  // Try to get address from profile or use identity address
+  return user.profile?.stxAddress?.[isMainnet ? 'mainnet' : 'testnet'] 
+    || user.identityAddress 
+    || null;
 }
